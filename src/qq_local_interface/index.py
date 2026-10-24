@@ -32,7 +32,7 @@ CREATE TABLE changes(seq INTEGER PRIMARY KEY AUTOINCREMENT, generation TEXT NOT 
  revision TEXT, payload TEXT NOT NULL);
 """
 
-NORMALIZER_VERSION = 8
+NORMALIZER_VERSION = 9
 
 
 def rows(connection, table):

@@ -87,6 +87,22 @@ class RichBodyTests(unittest.TestCase):
         self.assertEqual(result['elements'][0]['card_decode_status'], 'raw_fields_available')
         self.assertEqual(result['raw_body']['sha256'], hashlib.sha256(raw).hexdigest())
 
+    def test_card_tree_bounds_do_not_depend_on_interpreter_recursion_limit(self):
+        import json
+        shallow = b'[' * 16 + b'0' + b']' * 16
+        self.assertEqual(json_card(shallow), json.loads(shallow))
+        # Both supported interpreters can decode this shape. Application-level
+        # bounds must still retain it as raw data rather than a deep JSON tree.
+        deep = b'[' * 256 + b'0' + b']' * 256
+        self.assertIsNotNone(json.loads(deep))
+        self.assertIsNone(json_card(deep))
+        wide = json.dumps(list(range(20000))).encode()
+        self.assertIsNone(json_card(wide))
+        raw = self.body(10, field(47901, deep))
+        decoded = decode_body(raw)
+        self.assertEqual(decoded['elements'][0]['card_decode_status'], 'raw_fields_available')
+        self.assertEqual(decoded['raw_body']['sha256'], hashlib.sha256(raw).hexdigest())
+
 
 class LosslessTests(unittest.TestCase):
     def setUp(self):

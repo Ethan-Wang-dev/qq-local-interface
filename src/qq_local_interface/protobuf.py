@@ -130,7 +130,22 @@ def json_card(data):
             if len(data) > MAX_BYTES or inflater.unconsumed_tail or not inflater.eof:
                 return None
         parsed = json.loads(data)
-        return parsed if isinstance(parsed, (dict, list)) else None
+        if not isinstance(parsed, (dict, list)):
+            return None
+        # JSON decoder recursion limits vary across Python versions. Bound the
+        # resulting tree explicitly so later serialization and indexing remain
+        # safe even when a newer decoder accepts very deep input.
+        pending, visited = [(parsed, 0)], 0
+        while pending:
+            value, depth = pending.pop()
+            visited += 1
+            if depth > 64 or visited > 10000:
+                return None
+            if isinstance(value, (dict, list)) and visited + len(pending) + len(value) > 10000:
+                return None
+            children = value.values() if isinstance(value, dict) else value if isinstance(value, list) else ()
+            pending.extend((child, depth + 1) for child in children)
+        return parsed
     except (ValueError, TypeError, zlib.error, UnicodeDecodeError, RecursionError):
         return None
 
