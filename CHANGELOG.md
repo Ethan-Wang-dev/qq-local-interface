@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.1 - 2026-10-23
+
+### Fixes
+
+- Bound decoded card JSON by depth and node count independently of Python's JSON decoder recursion limits. Deep or wide payloads retain exact raw access instead of breaking later serialization or indexing.
+- Bump the normalizer revision so existing snapshots rebuild their message index with the same bounds.
+
+### Validation
+
+- Add an interpreter-independent regression for accepted shallow cards and oversized trees; the synthetic suite now contains 56 tests.
+- The initial GitHub CI passed Python 3.10 and exposed the deep-card edge case on Python 3.12. This patch fixes that case without replacing the published v0.2.0 tag.
+
 ## 0.2.0 - 2026-10-23
 
 First public release. This publishes the existing 0.2.0 implementation; no earlier version was published from this repository.

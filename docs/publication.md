@@ -2,7 +2,7 @@
 
 这套实现可以作为独立的 `qq-local-interface` 工程发布。适合的定位是：
 
-公开仓库地址：[Ethan-Wang-dev/qq-local-interface](https://github.com/Ethan-Wang-dev/qq-local-interface)，首次公开版本为 `v0.2.0`。
+公开仓库地址：[Ethan-Wang-dev/qq-local-interface](https://github.com/Ethan-Wang-dev/qq-local-interface)。初始公开标签为 `v0.2.0`，修复跨 Python 版本的卡片边界后发布 `v0.2.1`。
 
 > 面向 Agent 的 macOS QQ 本地数据读侧接口：使用已有的 QQ 取 key 与 SQLCipher 格式研究，提供可审计的页面/WAL 读取、同步快照、精确原始数据和版本化接口。
 
