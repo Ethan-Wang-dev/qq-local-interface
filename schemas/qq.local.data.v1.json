@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:qq:local:data:v1",
+  "title": "Exact SQLite cells and raw records",
+  "oneOf": [{"$ref": "#/$defs/cell"}, {"$ref": "#/$defs/record"}],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "cell": {
+      "oneOf": [
+        {"type": "object", "properties": {"type": {"const": "null"}, "value": {"type": "null"}}, "required": ["type", "value"], "additionalProperties": false},
+        {"type": "object", "properties": {"type": {"const": "integer"}, "value": {"type": "string", "pattern": "^-?[0-9]+$"}}, "required": ["type", "value"], "additionalProperties": false},
+        {"type": "object", "properties": {"type": {"const": "real"}, "value": {"type": "string"}}, "required": ["type", "value"], "additionalProperties": false},
+        {
+          "type": "object",
+          "properties": {
+            "type": {"enum": ["text", "blob"]},
+            "length": {"type": "integer", "minimum": 0},
+            "sha256": {"$ref": "#/$defs/sha256"},
+            "encoding": {"enum": ["utf8", "base64", "reference"]},
+            "value": {"type": "string"}, "data": {"type": "string"},
+            "cell_ref": {"type": "string", "minLength": 1}
+          },
+          "required": ["type", "length", "sha256", "encoding"],
+          "oneOf": [
+            {"properties": {"type": {"const": "text"}, "encoding": {"const": "utf8"}}, "required": ["value"]},
+            {"properties": {"encoding": {"const": "base64"}}, "required": ["data"]},
+            {"properties": {"encoding": {"const": "reference"}}, "required": ["cell_ref"]}
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "record": {
+      "type": "object",
+      "properties": {
+        "id": {"type": "string", "pattern": "^record_[a-f0-9]{32}$"},
+        "row_ref": {"type": "string", "minLength": 1},
+        "revision": {"$ref": "#/$defs/sha256"},
+        "values": {"type": "object", "additionalProperties": {"$ref": "#/$defs/cell"}}
+      },
+      "required": ["id", "row_ref", "revision", "values"], "additionalProperties": false
+    }
+  }
+}

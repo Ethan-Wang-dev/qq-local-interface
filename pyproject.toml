@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qq-local-interface"
+version = "0.2.0"
+description = "Local macOS QQ snapshots, synchronization and language-neutral Agent interfaces"
+readme = 'README.md'
+requires-python = ">=3.10"
+dependencies = ["cryptography>=41"]
+license = 'MIT'
+license-files = ['LICENSE', 'THIRD_PARTY_NOTICES.md', 'LICENSES/*.txt']
+
+[project.urls]
+Repository = 'https://github.com/Ethan-Wang-dev/qq-local-interface'
+Issues = 'https://github.com/Ethan-Wang-dev/qq-local-interface/issues'
+Changelog = 'https://github.com/Ethan-Wang-dev/qq-local-interface/blob/main/CHANGELOG.md'
+
+[project.optional-dependencies]
+mcp = ["mcp>=1.20,<2"]
+test = ["jsonschema>=4.18", "mcp>=1.20,<2"]
+
+[project.scripts]
+qq-local-interface = "qq_local_interface.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

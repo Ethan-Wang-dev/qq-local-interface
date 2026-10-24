@@ -1,0 +1,289 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:qq:local:records:v1",
+  "title": "QQ normalized records",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/actor"
+    },
+    {
+      "$ref": "#/$defs/conversation"
+    },
+    {
+      "$ref": "#/$defs/message"
+    }
+  ],
+  "$defs": {
+    "actor": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "qq.local.v1"
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^actor_[a-f0-9]{32}$"
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "kind": {
+          "const": "person"
+        },
+        "uid": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "qq_number": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "display_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "friend_status": {
+          "enum": [
+            "self",
+            "friend",
+            "unknown"
+          ]
+        },
+        "provenance": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      },
+      "required": [
+        "schema_version",
+        "source_id",
+        "id",
+        "kind",
+        "uid",
+        "qq_number",
+        "display_name",
+        "friend_status",
+        "revision"
+      ],
+      "additionalProperties": true
+    },
+    "conversation": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "qq.local.v1"
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^conversation_[a-f0-9]{32}$"
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "kind": {
+          "enum": [
+            "person",
+            "group"
+          ]
+        },
+        "display_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "native_id": {
+          "type": "string"
+        },
+        "peer_actor_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "message_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "schema_version",
+        "source_id",
+        "id",
+        "kind",
+        "native_id",
+        "display_name",
+        "message_count",
+        "revision"
+      ],
+      "additionalProperties": true
+    },
+    "message": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "qq.local.v1"
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$"
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^item_[a-f0-9]{32}$"
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "resource_type": {
+          "const": "message"
+        },
+        "conversation_id": {
+          "type": "string",
+          "pattern": "^conversation_[a-f0-9]{32}$"
+        },
+        "author_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "created_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "direction": {
+          "enum": [
+            "incoming",
+            "outgoing",
+            "unknown"
+          ]
+        },
+        "kind": {
+          "type": "string"
+        },
+        "text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "elements": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "attachments": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "quality": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "enum": [
+                "complete",
+                "metadata_only",
+                "unsupported",
+                "decode_error"
+              ]
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "status",
+            "reason"
+          ],
+          "additionalProperties": false
+        },
+        "provenance": {
+          "type": "object",
+          "properties": {
+            "database": {
+              "type": "string"
+            },
+            "table": {
+              "type": "string"
+            },
+            "local_id": {
+              "type": "string"
+            },
+            "raw_row_sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          },
+          "required": [
+            "database",
+            "table",
+            "local_id",
+            "raw_row_sha256"
+          ],
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "schema_version",
+        "source_id",
+        "id",
+        "revision",
+        "resource_type",
+        "conversation_id",
+        "author_id",
+        "created_at",
+        "direction",
+        "kind",
+        "text",
+        "title",
+        "links",
+        "elements",
+        "attachments",
+        "quality",
+        "provenance"
+      ],
+      "additionalProperties": true
+    }
+  }
+}
